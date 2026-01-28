@@ -1,10 +1,7 @@
 package org.hwyl.sexytopo.control.io.thirdparty.svg;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.Xml;
-
-import com.google.android.material.tabs.TabLayout;
 
 import org.hwyl.sexytopo.R;
 import org.hwyl.sexytopo.control.io.basic.ExportFrameFactory;
@@ -13,7 +10,6 @@ import org.hwyl.sexytopo.control.util.GeneralPreferences;
 import org.hwyl.sexytopo.control.util.TextTools;
 import org.hwyl.sexytopo.model.common.Frame;
 import org.hwyl.sexytopo.model.graph.Coord2D;
-import org.hwyl.sexytopo.model.graph.Coord3D;
 import org.hwyl.sexytopo.model.graph.Line;
 import org.hwyl.sexytopo.model.graph.Projection2D;
 import org.hwyl.sexytopo.model.graph.Space;
