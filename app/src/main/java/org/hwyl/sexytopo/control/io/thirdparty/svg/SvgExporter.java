@@ -33,6 +33,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -253,28 +254,29 @@ public class SvgExporter extends DoubleSketchFileExporter {
         Map<Leg, Line<Coord2D>> legMap = projection.getLegMap();
         Integer legStrokeWidth = GeneralPreferences.getExportSvgLegStrokeWidth();
         Integer splayStrokeWidth = GeneralPreferences.getExportSvgSplayStrokeWidth();
+        // Write out the legs, grouping them by the station they start at
         for (Station station : stationMap.keySet()) {
             Coord2D station2d=stationMap.get(station);
-            Integer splayc=0;
-            if (centreline) {
+            Integer splayc=1;
+            if ((station2d != null) && centreline) {
                 xmlSerializer.startTag("", "text");
                 xmlSerializer.attribute("", "id", station.getName());
-                xmlSerializer.attribute("", "x", String.format("%.5f", scale * station2d.x));
-                xmlSerializer.attribute("", "y", String.format("%.5f", scale * station2d.y));
-                xmlSerializer.attribute("", "font-size", String.format("%d", STATION_FONT));
+                xmlSerializer.attribute("", "x", String.format(Locale.ROOT, "%.5f", scale * station2d.x));
+                xmlSerializer.attribute("", "y", String.format(Locale.ROOT, "%.5f", scale * station2d.y));
+                xmlSerializer.attribute("", "font-size", String.format(Locale.ROOT, "%d", STATION_FONT));
                 xmlSerializer.attribute("", "stroke", "black");
                 xmlSerializer.text(station.getName());
                 xmlSerializer.endTag("", "text");
             }
             for (Leg leg : legMap.keySet()) {
                 Line<Coord2D> line = legMap.get(leg);
-                if (station2d.equals(line.getStart()) && centreline == leg.hasDestination()) {
+                if ((line != null) && line.getStart().equals(station2d) && (centreline == leg.hasDestination())) {
                     xmlSerializer.startTag("", "polyline");
                     if (leg.hasDestination()) {
                         Station destination = leg.getDestination();
                         xmlSerializer.attribute("", "id", station.getName() + "-" + destination.getName());
                     } else {
-                        xmlSerializer.attribute("", "id", String.format("%s-Splay%d", station.getName(), splayc++));
+                        xmlSerializer.attribute("", "id", String.format(Locale.ROOT, "%s-Splay%d", station.getName(), splayc++));
                     }
                     String pointsString = TextTools.join(
                             ",", scale * line.getStart().x, scale * line.getStart().y, scale * line.getEnd().x, scale * line.getEnd().y);
@@ -336,7 +338,7 @@ public class SvgExporter extends DoubleSketchFileExporter {
         Colour colour = sketchDetail.getColour();
 
         // Special case hack! SVG should be able to handle British English
-        // but it seems that CorelDraw gets confused by "grey" >:(
+        // but it seems that CorelDraw gets confused by "grey" >:( 
         if (colour == Colour.GREY) {
             colour = Colour.GRAY;
         }
