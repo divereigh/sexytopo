@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TableLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -243,6 +244,13 @@ public class TableActivity extends SurveyEditorActivity
         }
 
         tableRowAdapter.setEntries(tableEntries);
+
+        // Synchronize header visibility
+        TextView commentHeader = findViewById(R.id.headerComment);
+        if (commentHeader != null) {
+            commentHeader.setVisibility(
+                tableRowAdapter.shouldShowCommentColumn() ? View.VISIBLE : View.GONE);
+        }
     }
 
     @Override
